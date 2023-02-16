@@ -8,6 +8,7 @@ export type TModalsBody = {
 }
 
 const DEFAULT_MODAL_SIZE = 500
+export const DEFAULT_HEADER_HEIGHT = 49
 
 export const ModalsBody = styled.div<TModalsBody>`
   position: absolute;
@@ -20,4 +21,18 @@ export const ModalsBody = styled.div<TModalsBody>`
   flex-direction: column;
   align-items: center;
   padding: 16px;
+  border-radius: 3px;
+`
+export const DefaultHeader = styled.div<{bgColor?: string}>`
+  position: absolute;
+  background-color: ${({bgColor}) => bgColor ?? theme.color.black.light};
+  color: ${theme.color.gray.light};
+  font-size: medium;
+  height: ${DEFAULT_HEADER_HEIGHT}px;
+  width: 100%;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px 3px 0 0;
 `
