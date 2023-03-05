@@ -11,16 +11,25 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: any;
+};
+
+export type AuthUserInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type CreateUserInput = {
   email: Scalars['String'];
-  login: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
   password: Scalars['String'];
 };
 
 export type Mutation = {
-  createUser: User;
+  createUser: UserEntity;
+  removeUser: Scalars['Float'];
+  updateUser: UserEntity;
 };
 
 
@@ -28,17 +37,45 @@ export type MutationCreateUserArgs = {
   input: CreateUserInput;
 };
 
-export type Query = {
-  hello: Scalars['String'];
+
+export type MutationRemoveUserArgs = {
+  id: Scalars['Float'];
 };
 
-export type User = {
-  created: Scalars['String'];
+
+export type MutationUpdateUserArgs = {
+  input: UpdateUserInput;
+};
+
+export type Query = {
+  auth: Scalars['String'];
+  getAllUsers: Array<UserEntity>;
+  getOneUser: UserEntity;
+};
+
+
+export type QueryAuthArgs = {
+  input: AuthUserInput;
+};
+
+
+export type QueryGetOneUserArgs = {
+  id: Scalars['Float'];
+};
+
+export type UpdateUserInput = {
+  email?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type UserEntity = {
+  createAt: Scalars['DateTime'];
   email: Scalars['String'];
-  id: Scalars['Int'];
-  login: Scalars['String'];
-  password: Scalars['String'];
-  updated: Scalars['String'];
+  id: Scalars['ID'];
+  name: Maybe<Scalars['String']>;
+  passwordHash: Scalars['String'];
+  updateAt: Scalars['DateTime'];
 };
 
 export type CreateUserMutationVariables = Exact<{
@@ -46,4 +83,4 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { createUser: { id: number } };
+export type CreateUserMutation = { createUser: { id: string } };
