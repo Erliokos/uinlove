@@ -1,11 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { JWToken, UserEntity } from 'src/users/entities/user.entity';
 import { CreateUserInput } from 'src/users/inputs/create-users.input';
 import { UpdateUserInput } from 'src/users/inputs/update-users.input';
 import { Repository } from 'typeorm';
 import { compare, genSaltSync, hashSync } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -13,6 +14,7 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async createUser(input: CreateUserInput): Promise<UserEntity> {
@@ -44,6 +46,15 @@ export class UserService {
     return this.getOneUser(input.id);
   }
 
+  async saveUserToken(id: number, refresh_token: string) {
+    await this.userRepository.update(
+      {
+        id,
+      },
+      { token: refresh_token },
+    );
+  }
+
   async validateUser(
     email: string,
     password: string,
@@ -55,11 +66,21 @@ export class UserService {
     if (!isCorrectPassword) throw new UnauthorizedException('Неверный пароль');
     return { email: user.email };
   }
-  async login(email: Pick<UserEntity, 'email'>) {
+  async login(email: Pick<UserEntity, 'email'>): Promise<JWToken> {
     const payload = { email };
-
+    const access_token = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get('JWT_SECRET'),
+      expiresIn: '1h',
+    });
+    const refresh_token = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: '30d',
+    });
+    const user = await this.getOneUserByEmail(email.email);
+    await this.saveUserToken(user.id, refresh_token);
     return {
-      access_token: await this.jwtService.signAsync(payload, {}),
+      access_token,
+      refresh_token,
     };
   }
 }

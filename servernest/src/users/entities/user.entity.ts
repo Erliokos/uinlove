@@ -33,4 +33,17 @@ export class UserEntity {
   @Field({ nullable: true })
   @Column({ nullable: true })
   name: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  token: string;
+}
+
+@ObjectType()
+export class JWToken {
+  @Field()
+  access_token: string;
+
+  @Field()
+  refresh_token: string;
 }

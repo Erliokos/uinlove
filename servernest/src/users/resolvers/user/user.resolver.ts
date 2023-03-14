@@ -1,6 +1,13 @@
 import { BadRequestException, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
-import { UserEntity } from 'src/users/entities/user.entity';
+import {
+  Args,
+  Mutation,
+  Resolver,
+  Query,
+  Context,
+  GraphQLExecutionContext,
+} from '@nestjs/graphql';
+import { JWToken, UserEntity } from 'src/users/entities/user.entity';
 import { GqlJwtAuthGuard } from 'src/users/guard/jwt.guard';
 import { AuthUserInput } from 'src/users/inputs/auth-users.input';
 import { CreateUserInput } from 'src/users/inputs/create-users.input';
@@ -20,6 +27,7 @@ export class UserResolver {
     return await this.userService.createUser(input);
   }
 
+  @UseGuards(GqlJwtAuthGuard)
   @Mutation(() => UserEntity)
   async updateUser(@Args('input') input: UpdateUserInput): Promise<UserEntity> {
     return await this.userService.updateUser(input);
@@ -40,9 +48,13 @@ export class UserResolver {
   async getAllUsers(): Promise<UserEntity[]> {
     return await this.userService.getAllUsers();
   }
-  @Query(() => String)
-  async auth(@Args('input') { password, email }: AuthUserInput) {
+  @Query(() => JWToken)
+  async auth(
+    @Context() context: GraphQLExecutionContext,
+    @Args('input') { password, email }: AuthUserInput,
+  ) {
     const userEmail = await this.userService.validateUser(email, password);
-    return (await this.userService.login(userEmail)).access_token;
+    const token = await this.userService.login(userEmail);
+    return token;
   }
 }

@@ -18,6 +18,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type JWToken {
+  access_token: String!
+  refresh_token: String!
+}
+
 type Mutation {
   createUser(input: CreateUserInput!): UserEntity!
   removeUser(id: Float!): Float!
@@ -25,7 +30,7 @@ type Mutation {
 }
 
 type Query {
-  auth(input: AuthUserInput!): String!
+  auth(input: AuthUserInput!): JWToken!
   getAllUsers: [UserEntity!]!
   getOneUser(id: Float!): UserEntity!
 }
@@ -42,5 +47,6 @@ type UserEntity {
   id: ID!
   name: String
   passwordHash: String!
+  token: String
   updateAt: DateTime!
 }

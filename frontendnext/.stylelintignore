@@ -1,0 +1,11 @@
+**/*.js
+**/*.graphql
+**/*.md
+**/*.html
+**/*.svg
+public/**/*.*
+src/common/audio/**/*.*
+src/common/img/**/*.*
+deploy/img/**/*.*
+**/*.yml
+**/*.json

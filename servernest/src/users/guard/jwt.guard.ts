@@ -11,7 +11,6 @@ export class GqlJwtAuthGuard extends AuthGuard('jwt') {
   constructor(private reflector: Reflector) {
     super();
   }
-
   canActivate(ctx: ExecutionContext) {
     const context = GqlExecutionContext.create(ctx);
     const isPublic = this.reflector.getAllAndOverride<boolean>('token', [

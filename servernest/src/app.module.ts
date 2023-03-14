@@ -13,6 +13,7 @@ import { UsersModule } from './users/users.module';
       autoSchemaFile: 'schema.gql',
       sortSchema: true,
       playground: true,
+      context: ({ req, res }) => ({ req, res }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
