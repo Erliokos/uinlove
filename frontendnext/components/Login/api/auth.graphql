@@ -1,0 +1,5 @@
+query Auth ($args: AuthUserInput!){
+  auth(input: $args){
+    access_token
+  }
+}
