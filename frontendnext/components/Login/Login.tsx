@@ -39,10 +39,6 @@ export function Login() {
   return (
     <Styled.LoginModals>
       <Styled.AuthContainer>
-        <div>
-          {auth.email}
-          {auth.password}
-        </div>
         <h1>АВТОРИЗАЦИЯ</h1>
         <Styled.Input
           type={"email"}

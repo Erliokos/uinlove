@@ -24,11 +24,8 @@ export const AuthContainer = styled.div`
 
 export const Input = styled.input`
   margin-top: 24px;
-  background: #00aec9;
-  color: #fff;
   cursor: pointer;
-  text-transform: uppercase;
-  width: 100%;
+  width: 90%;
   border-radius: 5px;
   height: 35px;
   border-color: transparent;
@@ -43,7 +40,7 @@ export const Input = styled.input`
 
   export const Button = styled.button`
   margin-top: 24px;
-  background: #00aec9;
+  background-color: darkgray;
   color: #fff;
   border-radius: 5px;
   width: 60px;
