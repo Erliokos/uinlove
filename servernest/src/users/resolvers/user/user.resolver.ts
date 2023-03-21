@@ -7,7 +7,7 @@ import {
   Context,
   GraphQLExecutionContext,
 } from '@nestjs/graphql';
-import { JWToken, UserEntity } from 'src/users/entities/user.entity';
+import { UserAuth, UserEntity } from 'src/users/entities/user.entity';
 import { GqlJwtAuthGuard } from 'src/users/guard/jwt.guard';
 import { AuthUserInput } from 'src/users/inputs/auth-users.input';
 import { CreateUserInput } from 'src/users/inputs/create-users.input';
@@ -18,13 +18,20 @@ import { UserService } from 'src/users/services/user/user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Mutation(() => UserEntity)
+  @Mutation(() => UserAuth)
   async createUser(@Args('input') input: CreateUserInput): Promise<UserEntity> {
     const oldUser = await this.userService.getOneUserByEmail(input.email);
     if (oldUser) {
       throw new BadRequestException('Такой пользователь уже зарегистирован');
     }
-    return await this.userService.createUser(input);
+    const user = await this.userService.createUser(input);
+    const userEmail = await this.userService.validateUser(
+      input.email,
+      input.password,
+    );
+    const token = await this.userService.login(userEmail);
+
+    return { ...user, ...token };
   }
 
   @UseGuards(GqlJwtAuthGuard)
@@ -48,13 +55,14 @@ export class UserResolver {
   async getAllUsers(): Promise<UserEntity[]> {
     return await this.userService.getAllUsers();
   }
-  @Query(() => JWToken)
+  @Query(() => UserAuth)
   async auth(
     @Context() context: GraphQLExecutionContext,
     @Args('input') { password, email }: AuthUserInput,
   ) {
+    const user = await this.userService.getOneUserByEmail(email);
     const userEmail = await this.userService.validateUser(email, password);
     const token = await this.userService.login(userEmail);
-    return token;
+    return { ...token, ...user };
   }
 }

@@ -1,24 +1,23 @@
 import "../styles/globals.css";
-import { ApolloClient, ApolloProvider, from, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloProvider, from, HttpLink, InMemoryCache } from "@apollo/client";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { MantineProvider } from '@mantine/core'
+import { MantineProvider } from '@mantine/core';
 import { errorLink } from "@/client/links/errorLink";
+import { authLink } from "@/client/links/authLink";
 
-const client = new ApolloClient({
+const httpLink = new HttpLink({
   uri: "http://localhost:3001/graphql",
-  cache: new InMemoryCache(),
 });
 
-export const uploadClient = new ApolloClient({
-  uri: "http://localhost:3001/graphql",
-  link: from([errorLink]),
+const client = new ApolloClient({
+  link: from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
 });
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
-    <ApolloProvider client={uploadClient}>
+    <ApolloProvider client={client}>
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS

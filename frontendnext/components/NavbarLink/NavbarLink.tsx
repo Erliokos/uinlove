@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Navbar, Tooltip, UnstyledButton, Stack } from "@mantine/core";
 import {
   IconHome2,
@@ -11,7 +11,7 @@ import {
   IconLogout,
 } from "@tabler/icons-react";
 import { useStyles } from "./useStyle";
-import { authorization } from "../Auth/authorization";
+import { authorization } from "../../client/authorization";
 import { getTXT } from "../Language/Language";
 
 
@@ -46,15 +46,17 @@ const mockdata = [
   { icon: IconSettings, label: TXT.Settings },
 ];
 
+interface Props {
+  setUserToken: Dispatch<SetStateAction<string | null>>
+}
 
-
-export function NavbarMinimal() {
+export function NavbarMinimal({ setUserToken }: Props) {
   const [active, setActive] = useState(2);
 
   const handleLogOut = () => {
     authorization.logout();
+    setUserToken(null);
   };
-
 
   const links = mockdata.map((link, index) => (
     <NavbarLink {...link} key={link.label} active={index === active} onClick={() => setActive(index)} />

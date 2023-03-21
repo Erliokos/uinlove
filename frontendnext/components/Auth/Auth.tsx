@@ -1,40 +1,58 @@
-import { useAuthLazyQuery } from "@/generated/hooks";
-import { UserEntity } from "@/generated/operations";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { useAuthQuery, useCreateUserMutation } from "@/generated/hooks";
 import { ISignIn, SignIn } from "./Authentication/SignIn";
 import { ISignUp, SignUp } from "./Authentication/SignUp";
-import { authorization } from "./authorization";
+import { authorization } from "../../client/authorization";
+import { getTXT } from "../Language/Language";
 
 interface Props {
-  setUser: Dispatch<SetStateAction<Partial<UserEntity & { Languge: string }> | null>>;
+  setUserToken: Dispatch<SetStateAction<string | null>>;
 }
 
-export function Auth({ setUser }: Props) {
+export function Auth({ setUserToken }: Props) {
+  const TXT = getTXT();
+
   const [signMode, setSignMode] = useState<boolean>(true);
 
-  const [authQuery] = useAuthLazyQuery();
+  const { refetch } = useAuthQuery({ skip: true });
+  const [createUser] = useCreateUserMutation();
 
-  const onSubmitSignIn: ISignIn["onSubmit"] = async (data, setError) => {
+  const onSubmitSignIn: ISignIn["onSubmit"] = async (data, setError, isMemoryUser) => {
     try {
-      const { data: userData } = await authQuery({ variables: { args: data } });
-      
-      if (userData?.auth.access_token) {
-        authorization.setCurrentUser(data);
-        authorization.setAuthorizationToken(userData.auth.access_token);
-        authorization.setRefreshToken(userData.auth.refresh_token);
+      const {
+        data: { auth: user },
+      } = await refetch({ args: data });
+      if (user.access_token) {
+        authorization.setCurrentUser({ email: data.email });
+        authorization.setAuthorizationToken(user.access_token);
+        if (isMemoryUser) {
+          authorization.setRefreshToken(user.refresh_token);
+        }
+        setUserToken(authorization.getCurrentToken());
       }
-      setUser(data);
-
     } catch (error) {
-      console.log('error777');
-      setError("email", { message: error as string });
+      setError("email", { message: TXT.InvalidUserInput });
+      setError("password", { message: TXT.InvalidUserInput });
     }
-
-
-    
   };
-  const onSubmitSignUp: ISignUp["onSubmit"] = async (data, setError) => {
-    console.log(data);
+  const onSubmitSignUp: ISignUp["onSubmit"] = async (data, setError, isMemoryUser) => {
+    try {
+      const { data: createData } = await createUser({ variables:{args: data} });
+      const user = createData?.createUser;
+      if (user?.access_token) {
+        authorization.setCurrentUser({ email: data.email });
+        authorization.setAuthorizationToken(user.access_token);
+        if (isMemoryUser) {
+          authorization.setRefreshToken(user.refresh_token);
+        }
+        setUserToken(authorization.getCurrentToken());
+      }
+    } catch (error) {
+      setError("name", { message: TXT.InvalidUserInput });
+      setError("email", { message: TXT.InvalidUserInput });
+      setError("password", { message: TXT.InvalidUserInput });
+      setError("cPassword", { message: TXT.InvalidUserInput });
+    }
   };
 
   return (

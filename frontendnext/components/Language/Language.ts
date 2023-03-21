@@ -23,7 +23,10 @@ export enum Russian {
   Settings = 'Настройки',
   Releases = 'Релизы',
   Account = 'Аккаунт',
-  Security = 'Безопастность'
+  Security = 'Безопастность',
+  InvalidUserInput = 'Неверный пользовательский ввод',
+  YourPassword = 'Введите пароль',
+  RepeatPassword = 'Повторите пароль'
 }
 
 export enum English {
@@ -49,7 +52,10 @@ export enum English {
   Settings = 'Settings',
   Releases = 'Releases',
   Account = 'Account',
-  Security = 'Security'
+  Security = 'Security',
+  InvalidUserInput = 'invalid user input',
+  YourPassword = 'Your password',
+  RepeatPassword = 'repeat password'
 }
 
 export const Language = {

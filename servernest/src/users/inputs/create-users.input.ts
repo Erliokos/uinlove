@@ -9,5 +9,8 @@ export class CreateUserInput {
   password: string;
 
   @Field({ nullable: true })
+  cPassword: string;
+
+  @Field({ nullable: true })
   name: string;
 }

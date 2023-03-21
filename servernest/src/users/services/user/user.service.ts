@@ -61,9 +61,9 @@ export class UserService {
   ): Promise<Pick<UserEntity, 'email'>> {
     const user = await this.getOneUserByEmail(email);
     if (!user)
-      throw new UnauthorizedException('Пользователь с таким Email не найден');
+      throw new UnauthorizedException('invalid user input');
     const isCorrectPassword = await compare(password, user.passwordHash);
-    if (!isCorrectPassword) throw new UnauthorizedException('Неверный пароль');
+    if (!isCorrectPassword) throw new UnauthorizedException('invalid user input');
     return { email: user.email };
   }
   async login(email: Pick<UserEntity, 'email'>): Promise<JWToken> {

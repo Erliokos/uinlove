@@ -1,17 +1,19 @@
 import { getTXT } from "@/components/Language/Language";
 import { CreateUserInput } from "@/generated/operations";
 import { Paper, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor } from "@mantine/core";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm, UseFormSetError } from "react-hook-form";
 import { useStyles } from "./useStyle";
 
 export interface ISignUp {
-  onSubmit: (data: CreateUserInput, setError: UseFormSetError<CreateUserInput>) => Promise<void>;
+  onSubmit: (data: CreateUserInput, setError: UseFormSetError<CreateUserInput>, isMemoryUser: boolean) => Promise<void>;
   onChangeSignMode: Dispatch<SetStateAction<boolean>>;
 }
 
 export function SignUp({ onSubmit, onChangeSignMode }: ISignUp) {
   const TXT = getTXT();
+
+  const [isMemoryUser, setIsMemoryUser] = useState<boolean>(false);
 
   const { classes } = useStyles();
 
@@ -24,7 +26,7 @@ export function SignUp({ onSubmit, onChangeSignMode }: ISignUp) {
   } = useForm<CreateUserInput & { cPassword: string }>({});
 
   return (
-    <form className={classes.form} onSubmit={handleSubmit((data) => onSubmit(data, setError))}>
+    <form className={classes.form} onSubmit={handleSubmit((data) => onSubmit(data, setError, isMemoryUser))}>
       <Paper className={classes.form} radius={0} p={20}>
         <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
           UINLOVE
@@ -32,7 +34,7 @@ export function SignUp({ onSubmit, onChangeSignMode }: ISignUp) {
         <TextInput
           {...register("name", { required: TXT.RequiredToFill })}
           label={TXT.Name}
-          placeholder="name"
+          placeholder={TXT.Name}
           size="sm"
           error={errors.name?.message}
         />
@@ -45,14 +47,16 @@ export function SignUp({ onSubmit, onChangeSignMode }: ISignUp) {
           placeholder="hello@gmail.com"
           size="sm"
           error={errors.email?.message}
+          required
         />
         <PasswordInput
           {...register("password", { required: TXT.RequiredToFill })}
           label={TXT.Password}
-          placeholder="Your password"
+          placeholder={TXT.YourPassword}
           mt="md"
           size="sm"
           error={errors.password?.message}
+          required
         />
         <PasswordInput
           {...register("cPassword", {
@@ -64,12 +68,13 @@ export function SignUp({ onSubmit, onChangeSignMode }: ISignUp) {
             },
           })}
           label={TXT.RepeatThePassword}
-          placeholder="repeat password"
+          placeholder={TXT.RepeatPassword}
           mt="md"
           size="sm"
           error={errors.cPassword?.message}
+          required
         />
-        <Checkbox label={TXT.KeepMeLoggedIn} mt="xl" size="sm" />
+        <Checkbox label={TXT.KeepMeLoggedIn} mt="xl" size="sm" onChange={() => setIsMemoryUser((prev) => !prev)} />
         <Button fullWidth mt="xl" size="md" type={"submit"}>
           {TXT.SignUp}
         </Button>

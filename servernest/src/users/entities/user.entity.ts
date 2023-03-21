@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, IntersectionType, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -47,3 +47,6 @@ export class JWToken {
   @Field()
   refresh_token: string;
 }
+
+@ObjectType()
+export class UserAuth extends IntersectionType(JWToken, UserEntity) {}

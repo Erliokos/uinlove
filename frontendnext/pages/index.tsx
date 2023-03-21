@@ -1,7 +1,6 @@
 import { Auth } from "@/components/Auth/Auth";
-import { authorization } from "@/components/Auth/authorization";
+import { authorization } from "@/client/authorization";
 import { NavbarMinimal } from "@/components/NavbarLink/NavbarLink";
-import { UserEntity } from "@/generated/operations";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -10,17 +9,17 @@ export default function Home() {
     setHydrated(true);
   }, []);
 
-  const [user, setUser] = useState<Partial<UserEntity & { Languge: string }> | null>(null);
+  const [userToken, setUserToken] = useState<string| null>(null);
 
-  console.log(user);
+  console.log(userToken);
   
-  const userdata = authorization.getCurrentUser();
+  const userdata = authorization.getCurrentToken();
 
-  useEffect(() => {
-    setUser(userdata);
+  useEffect(() => {    
+    setUserToken(userdata);
   }, [userdata]);
 
-  if(user === null) return <>{hydrated && <Auth setUser={setUser} />}</>;
+  if(userToken === null) return <>{hydrated && <Auth setUserToken={setUserToken} />}</>;
 
-  return <>{hydrated && <NavbarMinimal />}</>;
+  return <>{hydrated && <NavbarMinimal setUserToken={setUserToken} />}</>;
 }

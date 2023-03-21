@@ -1,6 +1,18 @@
 query Auth ($args: AuthUserInput!){
   auth(input: $args){
-    access_token
-    refresh_token
+    ...User
   }
+}
+
+mutation CreateUser($args: CreateUserInput!){
+  createUser(input: $args){
+    ...User
+  }
+}
+
+fragment User on UserAuth {
+  access_token
+  refresh_token
+  email
+  name
 }

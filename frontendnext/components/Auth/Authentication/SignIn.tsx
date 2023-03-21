@@ -1,17 +1,19 @@
 import { getTXT } from "@/components/Language/Language";
 import { AuthUserInput } from "@/generated/operations";
 import { Paper, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor } from "@mantine/core";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm, UseFormSetError } from "react-hook-form";
 import { useStyles } from "./useStyle";
 
 export interface ISignIn {
-  onSubmit: (data: AuthUserInput, setError: UseFormSetError<AuthUserInput>) => Promise<void>;
+  onSubmit: (data: AuthUserInput, setError: UseFormSetError<AuthUserInput>, isMemoryUser: boolean) => Promise<void>;
   onChangeSignMode: Dispatch<SetStateAction<boolean>>;
 }
 
 export function SignIn({ onSubmit, onChangeSignMode }: ISignIn) {
   const TXT = getTXT();
+
+  const [isMemoryUser, setIsMemoryUser] = useState<boolean>(false);
 
   const { classes } = useStyles();
 
@@ -23,7 +25,7 @@ export function SignIn({ onSubmit, onChangeSignMode }: ISignIn) {
   } = useForm<AuthUserInput>({});
 
   return (
-    <form className={classes.form} onSubmit={handleSubmit((data) => onSubmit(data, setError))}>
+    <form className={classes.form} onSubmit={handleSubmit((data) => onSubmit(data, setError, isMemoryUser))}>
       <Paper className={classes.form} radius={0} p={20}>
         <Title order={2} className={classes.title} ta="center" mt="md" mb={50}>
           UINLOVE
@@ -43,13 +45,13 @@ export function SignIn({ onSubmit, onChangeSignMode }: ISignIn) {
         <PasswordInput
           {...register("password", { required: TXT.RequiredToFill })}
           label={TXT.Password}
-          placeholder="Your password"
+          placeholder={TXT.YourPassword}
           mt="md"
           size="sm"
           error={errors.password?.message}
           required
         />
-        <Checkbox label={TXT.KeepMeLoggedIn} mt="xl" size="sm" />
+        <Checkbox label={TXT.KeepMeLoggedIn} mt="xl" size="sm" onChange={() => setIsMemoryUser(prev => !prev)} />
         <Button fullWidth mt="xl" size="md" type={"submit"}>
           {TXT.Login}
         </Button>
