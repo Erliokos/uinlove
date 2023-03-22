@@ -11,6 +11,8 @@ import { UserAuth, UserEntity } from 'src/users/entities/user.entity';
 import { GqlJwtAuthGuard } from 'src/users/guard/jwt.guard';
 import { AuthUserInput } from 'src/users/inputs/auth-users.input';
 import { CreateUserInput } from 'src/users/inputs/create-users.input';
+import { LanguageInput } from 'src/users/inputs/language-user.input';
+import { ThemeInput } from 'src/users/inputs/theme-user.input';
 import { UpdateUserInput } from 'src/users/inputs/update-users.input';
 import { UserService } from 'src/users/services/user/user.service';
 
@@ -64,5 +66,17 @@ export class UserResolver {
     const userEmail = await this.userService.validateUser(email, password);
     const token = await this.userService.login(userEmail);
     return { ...token, ...user };
+  }
+
+  @Query(() => Boolean)
+  async changeLanguage(@Args('input') input: LanguageInput): Promise<boolean> {
+    await this.userService.changeLanguge(input);
+    return true;
+  }
+
+  @Query(() => Boolean)
+  async changeTheme(@Args('input') input: ThemeInput): Promise<boolean> {
+    await this.userService.changeTheme(input);
+    return true;
   }
 }

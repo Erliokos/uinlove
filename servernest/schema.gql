@@ -7,6 +7,17 @@ input AuthUserInput {
   password: String!
 }
 
+enum ColorScheme {
+  Dark
+  Light
+}
+
+input CreatePostInput {
+  author: Float
+  name: String
+  text: String
+}
+
 input CreateUserInput {
   cPassword: String
   email: String!
@@ -19,16 +30,44 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+enum Language {
+  English
+  Russian
+}
+
+input LanguageInput {
+  id: ID!
+  language: String!
+}
+
 type Mutation {
+  createPost(input: CreatePostInput!): PostEntity!
   createUser(input: CreateUserInput!): UserAuth!
   removeUser(id: Float!): Float!
   updateUser(input: UpdateUserInput!): UserEntity!
 }
 
+type PostEntity {
+  authorName: String!
+  createAt: DateTime!
+  id: ID!
+  name: String!
+  text: String!
+  updateAt: DateTime!
+}
+
 type Query {
   auth(input: AuthUserInput!): UserAuth!
+  changeLanguage(input: LanguageInput!): Boolean!
+  changeTheme(input: ThemeInput!): Boolean!
+  getAllPosts: [PostEntity!]!
   getAllUsers: [UserEntity!]!
   getOneUser(id: Float!): UserEntity!
+}
+
+input ThemeInput {
+  colorScheme: String!
+  id: ID!
 }
 
 input UpdateUserInput {
@@ -39,9 +78,11 @@ input UpdateUserInput {
 
 type UserAuth {
   access_token: String!
+  colorScheme: ColorScheme
   createAt: DateTime!
   email: String!
   id: ID!
+  language: Language
   name: String
   passwordHash: String!
   refresh_token: String!
@@ -50,9 +91,11 @@ type UserAuth {
 }
 
 type UserEntity {
+  colorScheme: ColorScheme
   createAt: DateTime!
   email: String!
   id: ID!
+  language: Language
   name: String
   passwordHash: String!
   token: String

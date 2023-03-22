@@ -1,4 +1,5 @@
-import { UserEntity } from "@/generated/operations";
+import { Language, UserEntity } from "@/generated/operations";
+import { ColorScheme } from "@mantine/core";
 
 const storage = typeof window !== "undefined" ? localStorage : null;
 
@@ -6,18 +7,25 @@ enum EStorageField {
   USERDATA = 'USERDATA',
   UIN_TOKEN = 'UIN_TOKEN',
   UIN_REFRESH_TOKEN = 'UIN_REFRESH_TOKEN',
+  LANGUAGE = 'LANGUAGE',
+  THEME = 'THEME',
 }
-
-// type Token = {
-//   token: string;
-//   expiration: string;
-// };
 
 export const authorization = {
 
-  setCurrentUser(user: Partial<UserEntity & { Languge: string }>) {
+  setCurrentUser(user: Partial<UserEntity>) {
     if (!storage) return;
     storage.setItem(EStorageField.USERDATA, JSON.stringify(user));
+  },
+
+  setCurrentLanguage(languge: string) {
+    if (!storage) return;
+    storage.setItem(EStorageField.LANGUAGE, JSON.stringify(languge));
+  },
+
+  setCurrentTheme(colorScheme: string) {
+    if (!storage) return;
+    storage.setItem(EStorageField.THEME, JSON.stringify(colorScheme));
   },
 
   setAuthorizationToken(token: string) {
@@ -35,6 +43,8 @@ export const authorization = {
     storage.removeItem(EStorageField.USERDATA);
     storage.removeItem(EStorageField.UIN_TOKEN);
     storage.removeItem(EStorageField.UIN_REFRESH_TOKEN);
+    storage.removeItem(EStorageField.LANGUAGE);
+    storage.removeItem(EStorageField.THEME);
   },
 
   removeUser() {
@@ -72,6 +82,26 @@ export const authorization = {
     }
   },
 
+  getCurrentLanguage(): Language | null {
+    if (!storage) return null;
+    const languge = storage.getItem(EStorageField.LANGUAGE);
+    try {
+      return languge ? JSON.parse(languge) : null;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  getCurrentTheme(): ColorScheme {
+    if (!storage) return 'dark';
+    const colorScheme = storage.getItem(EStorageField.THEME);
+    try {
+      return colorScheme ? JSON.parse(colorScheme) : 'dark';
+    } catch (e) {
+      return 'dark';
+    }
+  },
+
   getCurrentLogin() {
     return this.getCurrentUser()?.email;
   },
@@ -92,7 +122,7 @@ export const authorization = {
     return `${nameAndSurname[0]} ${nameAndSurname[1][0]}.`;
   },
 
-  getCurrentUser(): Partial<UserEntity & {Languge: string}> | null {
+  getCurrentUser(): Partial<UserEntity> | null {
     if (!storage) return null;
     const user = storage.getItem(EStorageField.USERDATA);
     try {

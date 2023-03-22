@@ -1,0 +1,21 @@
+mutation CreatePost($args: CreatePostInput!) {
+  createPost(input: $args) {
+    ...Post
+  }
+}
+
+query GetAllPosts {
+  getAllPosts {
+    ...Post
+  }
+}
+
+fragment Post on PostEntity {
+  id
+  authorName
+  createAt
+  name
+  text
+}
+
+

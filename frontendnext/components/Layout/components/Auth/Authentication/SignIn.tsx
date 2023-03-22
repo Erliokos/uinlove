@@ -1,4 +1,4 @@
-import { getTXT } from "@/components/Language/Language";
+import { useTranslate } from "@/client/Language/Language";
 import { AuthUserInput } from "@/generated/operations";
 import { Paper, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor } from "@mantine/core";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -11,7 +11,7 @@ export interface ISignIn {
 }
 
 export function SignIn({ onSubmit, onChangeSignMode }: ISignIn) {
-  const TXT = getTXT();
+  const TXT = useTranslate();
 
   const [isMemoryUser, setIsMemoryUser] = useState<boolean>(false);
 

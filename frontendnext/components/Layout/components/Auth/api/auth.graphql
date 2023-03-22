@@ -4,6 +4,14 @@ query Auth ($args: AuthUserInput!){
   }
 }
 
+query ChangeLanguage($args: LanguageInput!) {
+  changeLanguage(input: $args)
+}
+
+query ChangeTheme($args: ThemeInput!) {
+  changeTheme(input: $args)
+}
+
 mutation CreateUser($args: CreateUserInput!){
   createUser(input: $args){
     ...User
@@ -15,4 +23,6 @@ fragment User on UserAuth {
   refresh_token
   email
   name
+  language
+  colorScheme
 }

@@ -1,3 +1,4 @@
+import { authorization } from "../authorization";
 
 
 export enum Russian {
@@ -26,7 +27,13 @@ export enum Russian {
   Security = 'Безопастность',
   InvalidUserInput = 'Неверный пользовательский ввод',
   YourPassword = 'Введите пароль',
-  RepeatPassword = 'Повторите пароль'
+  RepeatPassword = 'Повторите пароль',
+  CreatePost = 'Добавить пубпликацию',
+  Language = 'Язык',
+  Theme = 'Тема',
+  English = 'Английский',
+  Russian = 'Русский'
+
 }
 
 export enum English {
@@ -55,19 +62,22 @@ export enum English {
   Security = 'Security',
   InvalidUserInput = 'invalid user input',
   YourPassword = 'Your password',
-  RepeatPassword = 'repeat password'
+  RepeatPassword = 'repeat password',
+  CreatePost = 'Create post',
+  Language = 'Language',
+  Theme = 'Theme',
+  English = 'English',
+  Russian = 'Russian'
 }
 
-export const Language = {
+const Language = {
   English: English,
   Russian: Russian
 };
 
-export const getTXT = () => {
-  if (typeof window === "undefined") return Language['Russian'];
-  const UserJson = localStorage.getItem('USERDATA');
-  const User = UserJson ? JSON.parse(UserJson) : { Languge: 'Russian' };
-  switch (User.Languge) {
+export const useTranslate = () => {
+  const language = authorization.getCurrentLanguage();
+  switch (language) {
     case 'English':
       return Language['English'];
     default: return Language['Russian'];

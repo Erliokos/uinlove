@@ -1,25 +1,16 @@
-import { Auth } from "@/components/Auth/Auth";
-import { authorization } from "@/client/authorization";
-import { NavbarMinimal } from "@/components/NavbarLink/NavbarLink";
-import { useEffect, useState } from "react";
+import { CreatePost } from "@/components/Posts/CreatePost/CreatePost";
+import { Posts } from "@/components/Posts/Posts";
+import { Container, Group } from "@mantine/core";
 
 export default function Home() {
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
-  const [userToken, setUserToken] = useState<string| null>(null);
-
-  console.log(userToken);
-  
-  const userdata = authorization.getCurrentToken();
-
-  useEffect(() => {    
-    setUserToken(userdata);
-  }, [userdata]);
-
-  if(userToken === null) return <>{hydrated && <Auth setUserToken={setUserToken} />}</>;
-
-  return <>{hydrated && <NavbarMinimal setUserToken={setUserToken} />}</>;
+  return (
+    <Container  size={"xl"}>
+      <Container size={"xl"} p={"xs"}  m={"xs"}>
+        <CreatePost />
+      </Container>
+      <Group  spacing={20}>
+        <Posts />
+      </Group>
+    </Container>
+  );
 }

@@ -1,4 +1,10 @@
-import { Field, ID, IntersectionType, ObjectType } from '@nestjs/graphql';
+import {
+  Field,
+  ID,
+  IntersectionType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +12,19 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+export enum Language {
+  English = 'English',
+  Russian = 'Russian',
+}
+
+export enum ColorScheme {
+  Dark = 'dark',
+  Light = 'light',
+}
+
+registerEnumType(Language, { name: 'Language' });
+registerEnumType(ColorScheme, { name: 'ColorScheme' });
 
 @ObjectType()
 @Entity('users')
@@ -37,6 +56,14 @@ export class UserEntity {
   @Field({ nullable: true })
   @Column({ nullable: true })
   token: string;
+
+  @Field(() => ColorScheme, { nullable: true })
+  @Column({ nullable: true })
+  colorScheme?: string;
+
+  @Field(() => Language, { nullable: true })
+  @Column({ nullable: true })
+  language: Language;
 }
 
 @ObjectType()
