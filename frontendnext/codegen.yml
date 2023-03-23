@@ -1,6 +1,12 @@
 overwrite: true
+# schema: '../servernest/schema.gql'
 schema: '../servernest/schema.gql'
 documents: 'components/**/**.graphql'
+
+hooks:
+  # Runs prettier for generated files
+  afterAllFileWrite:
+    - prettier --write
 
 generates:
   # Exports GraphQL enums, inputs & result types for queries

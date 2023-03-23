@@ -4,6 +4,7 @@ mutation CreatePost($args: CreatePostInput!) {
   }
 }
 
+
 query GetAllPosts {
   getAllPosts {
     ...Post

@@ -19,6 +19,7 @@ mutation CreateUser($args: CreateUserInput!){
 }
 
 fragment User on UserAuth {
+  id
   access_token
   refresh_token
   email

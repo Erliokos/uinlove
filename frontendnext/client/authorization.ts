@@ -82,13 +82,13 @@ export const authorization = {
     }
   },
 
-  getCurrentLanguage(): Language | null {
-    if (!storage) return null;
+  getCurrentLanguage(): Language {
+    if (!storage) return Language.RUSSIAN;
     const languge = storage.getItem(EStorageField.LANGUAGE);
     try {
-      return languge ? JSON.parse(languge) : null;
+      return languge ? JSON.parse(languge) : Language.RUSSIAN;
     } catch (e) {
-      return null;
+      return Language.RUSSIAN;
     }
   },
 

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Navbar, Tooltip, UnstyledButton, Stack, ColorScheme, Modal, Autocomplete, AutocompleteItem } from "@mantine/core";
+import { Navbar, Tooltip, UnstyledButton, Stack, ColorScheme } from "@mantine/core";
 import {
   IconHome2,
   IconGauge,
@@ -10,13 +10,14 @@ import {
   IconSettings,
   IconLogout,
   IconLanguage,
-  IconMoon,
 } from "@tabler/icons-react";
 import { useStyles } from "./useStyle";
 import { authorization } from "../../../../client/authorization";
 import { useTranslate } from "../../../../client/Language/Language";
 import { Language } from "@/generated/operations";
 import { useDisclosure } from "@mantine/hooks";
+import LanguageModal from "../LanguageModal/LanguageModal";
+import { ThemeSwitch } from "../ThemeSwitch/ThemeSwitch";
 
 interface NavbarLinkProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,11 +45,12 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 interface Props {
   setUserToken: Dispatch<SetStateAction<string | null>>;
   setColorScheme: Dispatch<SetStateAction<ColorScheme>>;
-  setLanguage: Dispatch<SetStateAction<Language | null>>;
-  language: Language | null;
+  setLanguage: Dispatch<SetStateAction<Language>>;
+  language: Language;
+  colorScheme: ColorScheme;
 }
 
-export function NavbarMinimal({ setUserToken, setColorScheme, setLanguage, language }: Props) {
+export function NavbarMinimal({ setUserToken, setColorScheme, setLanguage, colorScheme, language }: Props) {
   const [active, setActive] = useState(2);
 
   const TXT = useTranslate();
@@ -75,29 +77,13 @@ export function NavbarMinimal({ setUserToken, setColorScheme, setLanguage, langu
     else close();
   };
 
-  const handleChangeLanguage = ({ key }: AutocompleteItem) => {
-    authorization.setCurrentLanguage(key);
-    setLanguage(() => key);
-  };
-
   const links = mockdata.map((link, index) => (
     <NavbarLink {...link} key={link.label} active={index === active} onClick={() => setActive(index)} />
   ));
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title={TXT.Language} centered size="auto">
-        <Autocomplete
-          hoverOnSearchChange={false}
-          mt={"lg"}
-          defaultValue={TXT[language as Language] ?? ""}
-          data={[
-            { value: TXT[Language.ENGLISH], key: Language.ENGLISH },
-            { value: TXT[Language.RUSSIAN], key: Language.RUSSIAN },
-          ]}
-          onItemSubmit={handleChangeLanguage}
-        />
-      </Modal>
+      <LanguageModal opened={opened} close={close} onLanguageChange={setLanguage} language={language} />
       <Navbar width={{ base: 80 }} p="md">
         <Navbar.Section grow mt={50}>
           <Stack justify="center" spacing={0}>
@@ -106,7 +92,7 @@ export function NavbarMinimal({ setUserToken, setColorScheme, setLanguage, langu
         </Navbar.Section>
         <Navbar.Section>
           <Stack justify="center" spacing={0}>
-            <NavbarLink icon={IconMoon} label={TXT.Theme} onClick={handleLogOut} />
+            <NavbarLink icon={() => ThemeSwitch({ setColorScheme, colorScheme })} label={TXT.Theme} />
             <NavbarLink icon={IconLanguage} label={TXT.Language} onClick={handleOpenLanguageModal} />
             <NavbarLink icon={IconLogout} label={TXT.LogOut} onClick={handleLogOut} />
           </Stack>

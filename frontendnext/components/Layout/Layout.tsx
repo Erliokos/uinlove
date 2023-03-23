@@ -6,20 +6,15 @@ import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 
 import { Auth } from "./components/Auth/Auth";
 
 interface Props {
-  setColorScheme: Dispatch<SetStateAction<ColorScheme>>
+  setColorScheme: Dispatch<SetStateAction<ColorScheme>>;
   children: ReactNode;
+  colorScheme: ColorScheme;
+  language: Language;
+  setLanguage: Dispatch<SetStateAction<Language>>;
 }
 
-export function Layout({ children, setColorScheme }: Props) {
-  console.log('rnder');
-  
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
+export function Layout({ children, setColorScheme, colorScheme, language, setLanguage }: Props) {
   const [userToken, setUserToken] = useState<string | null>(null);
-  const [language, setLanguage] = useState<Language | null>(authorization.getCurrentLanguage());
 
   const userdata = authorization.getCurrentToken();
 
@@ -27,24 +22,21 @@ export function Layout({ children, setColorScheme }: Props) {
     setUserToken(userdata);
   }, [userdata]);
 
-  if (userToken === null) return <>{hydrated && <Auth setUserToken={setUserToken} />}</>;
+  if (userToken === null) return <Auth setUserToken={setUserToken} setLanguage={setLanguage} setColorScheme={setColorScheme} />;
 
   return (
-    <>
-      {hydrated && (
-        <AppShell
-          navbar={
-            <NavbarMinimal
-              setUserToken={setUserToken}
-              setColorScheme={setColorScheme}
-              language={language}
-              setLanguage={setLanguage}
-            />
-          }
-        >
-          {children}
-        </AppShell>
-      )}
-    </>
+    <AppShell
+      navbar={
+        <NavbarMinimal
+          setUserToken={setUserToken}
+          setColorScheme={setColorScheme}
+          colorScheme={colorScheme}
+          setLanguage={setLanguage}
+          language={language}
+        />
+      }
+    >
+      {children}
+    </AppShell>
   );
 }
