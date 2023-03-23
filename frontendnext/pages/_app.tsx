@@ -20,35 +20,30 @@ const client = new ApolloClient({
 });
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
-  console.log('render');
   
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     setHydrated(true);
   }, []);
 
+
   const [colorScheme, setColorScheme] = useState<ColorScheme>(authorization.getCurrentTheme());
   const [language, setLanguage] = useState<Language>(authorization.getCurrentLanguage());
 
+
   return (
     <ApolloProvider client={client}>
-      {hydrated && (
-        <MantineProvider
-          withGlobalStyles
-          withNormalizeCSS
-          theme={{
-            colorScheme,
-          }}
-        >
-          <Head>
-            <title>UINLOVE</title>
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
+      <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme }}>
+        <Head>
+          <title>UINLOVE</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        {hydrated && (
           <Layout setColorScheme={setColorScheme} colorScheme={colorScheme} language={language} setLanguage={setLanguage}>
             <Component {...pageProps} />
           </Layout>
-        </MantineProvider>
-      )}
+        )}
+      </MantineProvider>
     </ApolloProvider>
   );
 }

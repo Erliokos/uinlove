@@ -35,7 +35,7 @@ export function Auth({ setUserToken, setColorScheme, setLanguage }: Props) {
           setLanguage(language);
         }
         if (colorScheme) {
-          authorization.setCurrentTheme(colorScheme);
+          authorization.setCurrentTheme(colorScheme === ColorScheme.DARK ? "dark" : "light");
           setColorScheme(() => colorScheme === ColorScheme.DARK ? 'dark' : 'light');
         }
         if (isMemoryUser) {

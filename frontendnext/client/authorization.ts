@@ -23,7 +23,7 @@ export const authorization = {
     storage.setItem(EStorageField.LANGUAGE, JSON.stringify(languge));
   },
 
-  setCurrentTheme(colorScheme: string) {
+  setCurrentTheme(colorScheme: ColorScheme) {
     if (!storage) return;
     storage.setItem(EStorageField.THEME, JSON.stringify(colorScheme));
   },
