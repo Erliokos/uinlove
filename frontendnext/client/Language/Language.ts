@@ -32,8 +32,10 @@ export enum Russian {
   Language = 'Язык',
   Theme = 'Тема',
   English = 'Английский',
-  Russian = 'Русский'
-
+  Russian = 'Русский',
+  AutorName = 'Автор',
+  TitleOfThePublication = 'Название публикации',
+  TextOfThePublication = "Текст публикации",
 }
 
 export enum English {
@@ -67,7 +69,10 @@ export enum English {
   Language = 'Language',
   Theme = 'Theme',
   English = 'English',
-  Russian = 'Russian'
+  Russian = 'Russian',
+  AutorName = 'Author',
+  TitleOfThePublication = 'Title of the publication',
+  TextOfThePublication = 'Text of the publication',
 }
 
 const Language = {

@@ -2,12 +2,12 @@ import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreatePostInput {
-  @Field({ nullable: true })
+  @Field()
   name: string;
 
-  @Field({ nullable: true })
+  @Field()
   text: string;
 
-  @Field({ nullable: true })
-  author: number;
+  @Field()
+  author_id: number;
 }

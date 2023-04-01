@@ -13,7 +13,7 @@ query GetAllPosts {
 
 fragment Post on PostEntity {
   id
-  authorName
+  author_id
   createAt
   name
   text

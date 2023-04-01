@@ -5,16 +5,19 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
+import { UserService } from './users/services/user/user.service';
+import { APIGatewayEvent } from 'aws-lambda';
+import { log } from 'console';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot({
+      imports: [UserService],
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
       sortSchema: true,
       playground: true,
-      context: ({ req, res }) => ({ req, res }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

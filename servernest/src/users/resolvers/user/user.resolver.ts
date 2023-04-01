@@ -8,7 +8,7 @@ import {
   GraphQLExecutionContext,
 } from '@nestjs/graphql';
 import { UserAuth, UserEntity } from 'src/users/entities/user.entity';
-import { GqlJwtAuthGuard } from 'src/users/guard/jwt.guard';
+import { AuthorizationGuard } from 'src/users/guard/jwt.guard';
 import { AuthUserInput } from 'src/users/inputs/auth-users.input';
 import { CreateUserInput } from 'src/users/inputs/create-users.input';
 import { LanguageInput } from 'src/users/inputs/language-user.input';
@@ -36,13 +36,13 @@ export class UserResolver {
     return { ...user, ...token };
   }
 
-  @UseGuards(GqlJwtAuthGuard)
+  @UseGuards(AuthorizationGuard)
   @Mutation(() => UserEntity)
   async updateUser(@Args('input') input: UpdateUserInput): Promise<UserEntity> {
     return await this.userService.updateUser(input);
   }
 
-  @UseGuards(GqlJwtAuthGuard)
+  @UseGuards(AuthorizationGuard)
   @Mutation(() => Number)
   async removeUser(@Args('id') id: number): Promise<number> {
     return await this.userService.removeUser(id);
@@ -53,6 +53,7 @@ export class UserResolver {
     return await this.userService.getOneUser(id);
   }
 
+  @UseGuards(AuthorizationGuard)
   @Query(() => [UserEntity])
   async getAllUsers(): Promise<UserEntity[]> {
     return await this.userService.getAllUsers();

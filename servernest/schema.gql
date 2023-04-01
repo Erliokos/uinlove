@@ -13,9 +13,9 @@ enum ColorScheme {
 }
 
 input CreatePostInput {
-  author: Float
-  name: String
-  text: String
+  author_id: Float!
+  name: String!
+  text: String!
 }
 
 input CreateUserInput {
@@ -48,7 +48,7 @@ type Mutation {
 }
 
 type PostEntity {
-  authorName: String!
+  author_id: Float!
   createAt: DateTime!
   id: ID!
   name: String!
@@ -85,7 +85,6 @@ type UserAuth {
   language: Language
   name: String
   passwordHash: String!
-  refresh_token: String!
   token: String
   updateAt: DateTime!
 }

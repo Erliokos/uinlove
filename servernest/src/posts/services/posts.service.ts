@@ -8,14 +8,14 @@ import { CreatePostInput } from '../inputs/create-post.input';
 export class PostsService {
   constructor(
     @InjectRepository(PostEntity)
-    private readonly userRepository: Repository<PostEntity>,
+    private readonly postRepository: Repository<PostEntity>,
   ) {}
 
   async createPost(input: CreatePostInput): Promise<PostEntity> {
-    return await this.userRepository.save(input);
+    return await this.postRepository.save(input);
   }
 
   async getAllPosts(): Promise<PostEntity[]> {
-    return await this.userRepository.find();
+    return await this.postRepository.find();
   }
 }

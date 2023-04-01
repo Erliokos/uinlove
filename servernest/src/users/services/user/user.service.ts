@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JWToken, Language, UserEntity } from 'src/users/entities/user.entity';
+import { JWToken, UserEntity } from 'src/users/entities/user.entity';
 import { CreateUserInput } from 'src/users/inputs/create-users.input';
 import { UpdateUserInput } from 'src/users/inputs/update-users.input';
 import { Repository } from 'typeorm';
@@ -78,19 +78,37 @@ export class UserService {
   }
   async login(email: Pick<UserEntity, 'email'>): Promise<JWToken> {
     const payload = { email };
-    const access_token = await this.jwtService.signAsync(payload, {
+    const access_token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_SECRET'),
-      expiresIn: '1h',
+      expiresIn: '5s',
     });
-    const refresh_token = await this.jwtService.signAsync(payload, {
-      secret: this.configService.get('JWT_REFRESH_SECRET'),
-      expiresIn: '30d',
-    });
-    const user = await this.getOneUserByEmail(email.email);
-    await this.saveUserToken(user.id, refresh_token);
+    console.log(access_token);
+    // const refresh_token = await this.jwtService.signAsync(payload, {
+    //   secret: this.configService.get('JWT_REFRESH_SECRET'),
+    //   expiresIn: '30d',
+    // });
+    // const user = await this.getOneUserByEmail(email.email);
+    // await this.saveUserToken(user.id, refresh_token);
     return {
       access_token,
-      refresh_token,
+      // refresh_token,
     };
   }
+
+  async verifyAuthenticationToken(token: string): Promise<boolean> {
+    if (!token) {
+      return false;
+    }
+
+    try {
+      await this.jwtService.verifyAsync(token, {
+        secret: this.configService.get('JWT_SECRET'),
+      });
+
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
+

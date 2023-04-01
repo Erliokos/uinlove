@@ -1,38 +1,54 @@
+import { authorization } from "@/client/authorization";
+import { useTranslate } from "@/client/Language/Language";
+import { useCreatePostMutation, useGetAllPostsQuery } from "@/generated/hooks";
+import { CreatePostInput } from "@/generated/operations";
+import { Button, Group } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import React from "react";
 import { CardWithStats } from "./CardWithStats";
-import { CreatePost } from "./CreatePost/CreatePost";
+import { CreatePostModal } from "./CreatePost/CreatePostModal";
 
 export function Posts() {
+  const { data } = useGetAllPostsQuery();
+
+  const TXT = useTranslate();
+
+  const [opened, { open, close }] = useDisclosure(false);
+
+  const [createPost] = useCreatePostMutation();
+
+  const handleSubmit = async (data: Omit<CreatePostInput, "author">) => {
+    const user = authorization.getCurrentUser();
+    if (!user?.id) return;
+    try {
+      await createPost({ variables: { args: { author_id: +user.id, name: data.name, text: data.text } } });
+      close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <CardWithStats
-        name={"Карточка"}
-        text={`Сетевые издания сообщили, что ряд стартапов начал использовать языковую модель GPT-4 от OpenAI, чтобы сэкономить на разработчиках.
-                iXBT.com
-                По данным издания Vice, которое пообщалось с Перкинсом, тот изучал в школе информатику, но его знаний хватило только на понимание кода, а не на его написание.
-                iXBT.com
-                А вот сполнительный директор сферы онлайн-образования в Технологическом институте Джорджии Дэвид Джойнер (David Joyner) заявил, что языковые модели вряд ли заменят программистов.
-                iXBT.com
-                Таким образом, GPT-4 наверняка скоро станет востребованным инструментом на рынке, а разработчикам предстоит научиться использовать его, чтобы быть востребованными.`}
-        authorName={"Albert"}
-        createAt={undefined}
-        id={""}
-        updateAt={undefined}
-      />
-      <CardWithStats
-        name={"Карточка"}
-        text={`Сетевые издания сообщили, что ряд стартапов начал использовать языковую модель GPT-4 от OpenAI, чтобы сэкономить на разработчиках.
-                iXBT.com
-                По данным издания Vice, которое пообщалось с Перкинсом, тот изучал в школе информатику, но его знаний хватило только на понимание кода, а не на его написание.
-                iXBT.com
-                А вот сполнительный директор сферы онлайн-образования в Технологическом институте Джорджии Дэвид Джойнер (David Joyner) заявил, что языковые модели вряд ли заменят программистов.
-                iXBT.com
-                Таким образом, GPT-4 наверняка скоро станет востребованным инструментом на рынке, а разработчикам предстоит научиться использовать его, чтобы быть востребованными.`}
-        authorName={"Albert"}
-        createAt={undefined}
-        id={""}
-        updateAt={undefined}
-      />
+      <CreatePostModal opened={opened} close={close} onSubmit={handleSubmit} />
+      <Group m={'lg'} position="center">
+        <Button size={"xs"} onClick={open}>
+          {TXT.CreatePost}
+        </Button>
+      </Group>
+
+      {data?.getAllPosts.map((item) => (
+        <Group m={'lg'} position="center">
+          <CardWithStats
+            name={item.name}
+            text={item.text}
+            author_id={item.author_id}
+            createAt={item.createAt}
+            id={item.id}
+            updateAt={item.createAt}
+          />
+        </Group>
+      ))}
     </>
   );
 }

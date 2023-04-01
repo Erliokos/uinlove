@@ -1,8 +1,8 @@
 import { PostEntity } from "@/generated/operations";
-import { Card, Image, Text, Group, RingProgress } from "@mantine/core";
+import { Card, Text } from "@mantine/core";
 import { useStyles } from "./useStyles";
 
-export function CardWithStats({ name, text, authorName }: PostEntity) {
+export function CardWithStats({ name, text, author_id }: PostEntity) {
   const { classes } = useStyles();
 
   return (
@@ -11,10 +11,10 @@ export function CardWithStats({ name, text, authorName }: PostEntity) {
         {name}
       </Text>
       <Text mt="sm" fz="xs">
-        {'Author'}
+        {"Author"}
       </Text>
       <Text fz="sm" fw={700} className={classes.title}>
-        {authorName}
+        {author_id}
       </Text>
       <Text mt="sm" mb="md" fz="xs">
         {text}

@@ -28,7 +28,7 @@ export class PostEntity {
 
   @Field()
   @Column()
-  authorName: string;
+  author_id: number;
 
   @Field()
   @Column()
