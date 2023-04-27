@@ -13,7 +13,7 @@ export enum Russian {
   DontHaveAnAccount = 'Нет профиля?',
   Login = 'Войти',
   RequiredToFill = 'Обязательно для заполнения',
-  Name = 'Логин',
+  Name = 'Имя',
   RepeatThePassword = 'Повторите пароль',
   YourPasswordsDoNoMatch = 'Пароли не совпадают',
   InvalidEmail = 'Неверный формат Email',
@@ -36,6 +36,9 @@ export enum Russian {
   AutorName = 'Автор',
   TitleOfThePublication = 'Название публикации',
   TextOfThePublication = "Текст публикации",
+  Edit = 'Редактировать',
+  Close = 'Закрыть',
+  Confirm = 'Подтвердить',
 }
 
 export enum English {
@@ -73,6 +76,9 @@ export enum English {
   AutorName = 'Author',
   TitleOfThePublication = 'Title of the publication',
   TextOfThePublication = 'Text of the publication',
+  Edit = 'Edit',
+  Close = 'Close',
+  Confirm = 'Confirm',
 }
 
 const Language = {

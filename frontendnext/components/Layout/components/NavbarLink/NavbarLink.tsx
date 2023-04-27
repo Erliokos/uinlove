@@ -18,6 +18,7 @@ import { Language } from "@/generated/operations";
 import { useDisclosure } from "@mantine/hooks";
 import LanguageModal from "../LanguageModal/LanguageModal";
 import { ThemeSwitch } from "../ThemeSwitch/ThemeSwitch";
+import { useRouter } from "next/router";
 
 interface NavbarLinkProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,14 +56,16 @@ export function NavbarMinimal({ setUserToken, setColorScheme, setLanguage, color
 
   const TXT = useTranslate();
 
+  const router = useRouter();
+
   const mockdata = [
-    { icon: IconHome2, label: TXT.Home },
-    { icon: IconGauge, label: TXT.Dashboard },
-    { icon: IconDeviceDesktopAnalytics, label: TXT.Analytics },
-    { icon: IconCalendarStats, label: TXT.Releases },
-    { icon: IconUser, label: TXT.Account },
-    { icon: IconFingerprint, label: TXT.Security },
-    { icon: IconSettings, label: TXT.Settings },
+    { icon: IconHome2, label: TXT.Home, path: "/" },
+    { icon: IconGauge, label: TXT.Dashboard, path: "/" },
+    { icon: IconDeviceDesktopAnalytics, label: TXT.Analytics, path: "/" },
+    { icon: IconCalendarStats, label: TXT.Releases, path: "/" },
+    { icon: IconUser, label: TXT.Account, path: "/" },
+    { icon: IconFingerprint, label: TXT.Security, path: "/" },
+    { icon: IconSettings, label: TXT.Settings, path: "/settings" },
   ];
 
   const [opened, { open, close }] = useDisclosure(false);
@@ -78,7 +81,9 @@ export function NavbarMinimal({ setUserToken, setColorScheme, setLanguage, color
   };
 
   const links = mockdata.map((link, index) => (
-    <NavbarLink {...link} key={link.label} active={index === active} onClick={() => setActive(index)} />
+    <NavbarLink {...link} key={link.label} active={index === active} onClick={() => {setActive(index);
+      router.push(link.path);
+    }} />
   ));
 
   return (
