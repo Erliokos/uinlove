@@ -1,19 +1,14 @@
 import { useTranslate } from "@/client/Language/Language";
+import { UserSettingsFragment } from "@/generated/operations";
 import { Card, Text, Divider, Button, Container } from "@mantine/core";
 import React from "react";
 
 interface SettingsView {
+  user: UserSettingsFragment
   onEdit: () => void;
 }
 
-export const mokData = {
-  id: "1",
-  email: "albert.murzakov@gmail.com",
-  name: "Альберт Мак Ерлиокос",
-  age: 34,
-};
-
-export default function SettingsView({ onEdit }: SettingsView) {
+export default function SettingsView({ onEdit, user }: SettingsView) {
   const TXT = useTranslate();
   return (
     <Container size={"sm"}>
@@ -24,11 +19,11 @@ export default function SettingsView({ onEdit }: SettingsView) {
         <Divider my={"sm"} />
 
         <Text size={"xs"}>{TXT.EmailAddress}</Text>
-        <Text size={"sm"}>{mokData.email}</Text>
+        <Text size={"sm"}>{user.email}</Text>
         <Divider my={"sm"} />
 
         <Text size={"xs"}>{TXT.Name}</Text>
-        <Text size={"sm"}>{mokData.name}</Text>
+        <Text size={"sm"}>{user.name}</Text>
         <Divider my={"sm"} />
 
         <Button mt={"sm"} size={"xs"} onClick={onEdit}>

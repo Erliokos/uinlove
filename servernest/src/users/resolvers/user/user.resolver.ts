@@ -48,6 +48,7 @@ export class UserResolver {
     return await this.userService.removeUser(id);
   }
 
+  @UseGuards(AuthorizationGuard)
   @Query(() => UserEntity)
   async getOneUser(@Args('id') id: number): Promise<UserEntity> {
     return await this.userService.getOneUser(id);

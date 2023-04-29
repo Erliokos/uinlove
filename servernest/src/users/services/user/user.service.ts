@@ -80,7 +80,7 @@ export class UserService {
     const payload = { email };
     const access_token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_SECRET'),
-      expiresIn: '5s',
+      expiresIn: '30m',
     });
     console.log(access_token);
     // const refresh_token = await this.jwtService.signAsync(payload, {

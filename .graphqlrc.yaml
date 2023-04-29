@@ -1,0 +1,7 @@
+# Для работы с GraphQL использующих синтаксис Graphql Config 3.0: для VS Code
+projects:
+  frontendnext:
+    schema: 'servernest/schema.gql'
+    documents: 'frontendnext/**/*.graphql'
+    # Исключает шаринг fragment'ов между backend и frontend
+    documentsIncludes: ['servernest/schema.gql', frontendnext/generated]

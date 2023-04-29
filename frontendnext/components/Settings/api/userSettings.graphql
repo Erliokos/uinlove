@@ -1,0 +1,22 @@
+query UserSettings($id: Float!){
+  getOneUser(id: $id){
+    ...UserSettings
+  }
+}
+
+fragment UserSettings on UserEntity {
+  id
+  email
+  name
+}
+
+mutation UpdateUserSettings($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    ...UserSettings
+  }
+}
+
+
+
+
+

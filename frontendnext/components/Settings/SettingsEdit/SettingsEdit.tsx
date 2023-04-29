@@ -1,30 +1,50 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Card, Text, Divider, Button, TextInput, Container } from "@mantine/core";
 import { useTranslate } from '@/client/Language/Language';
 import { useForm } from 'react-hook-form';
-import { mokData } from '../SettingsView/SettingsView';
+import { UserSettingsFragment } from '@/generated/operations';
+import { useUpdateUserSettingsMutation } from '@/generated/hooks';
+import { ApolloError, isApolloError } from '@apollo/client/errors';
 
 interface SettingsEdit {
-  onClose: () => void
+  user: UserSettingsFragment;
+  onClose: () => void;
+  setUser: Dispatch<SetStateAction<UserSettingsFragment | undefined>>;
 }
 
-export default function SettingsEdit({ onClose }: SettingsEdit) {
+export default function SettingsEdit({ onClose, user, setUser }: SettingsEdit) {
   const TXT = useTranslate();
 
-    const {
-      handleSubmit,
-      register,
-      formState: { errors },
-      setError,
-    } = useForm<{email: string, name: string}>({defaultValues: {
-      email: mokData.email,
-      name: mokData.name
-    }});
-    
+  const [updateUserSettings] = useUpdateUserSettingsMutation({onCompleted: (data) => setUser(data.updateUser)});
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError
+  } = useForm<UserSettingsFragment>({
+    defaultValues: {
+      email: user.email,
+      name: user.name ?? "",
+    },
+  });
+
+  const handleSave = async (data: UserSettingsFragment) => {
+    try {
+      await updateUserSettings({
+        variables: { input: { ...data, id: user.id } },
+      });
+      onClose();
+    } catch (error) {
+      setError("email", error);
+    }
+
+  };
+
   return (
     <Container size={"sm"}>
       <Card p={"lg"}>
-        <form>
+        <form onSubmit={handleSubmit(handleSave)}>
           <Text size={"sm"} fw={700}>
             {TXT.Settings}
           </Text>
@@ -50,12 +70,12 @@ export default function SettingsEdit({ onClose }: SettingsEdit) {
             label={TXT.Name}
             placeholder={TXT.Name}
             size="xs"
-            error={errors.email?.message}
+            error={errors.name?.message}
             required
           />
           <Divider my={"sm"} />
 
-          <Button mr={"xs"} size={"xs"} onClick={onClose}>
+          <Button mr={"xs"} size={"xs"} type={'submit'}>
             {TXT.Confirm}
           </Button>
           <Button size={"xs"} onClick={onClose}>

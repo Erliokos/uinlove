@@ -38,7 +38,7 @@ export function Posts() {
       </Group>
 
       {data?.getAllPosts.map((item) => (
-        <Group m={'lg'} position="center">
+        <Group key={item.id} m={'lg'} position="center">
           <CardWithStats
             name={item.name}
             text={item.text}
