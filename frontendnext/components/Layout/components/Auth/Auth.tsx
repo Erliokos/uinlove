@@ -39,7 +39,7 @@ export function Auth({ setUserToken, setColorScheme, setLanguage }: Props) {
           setColorScheme(() => colorScheme === ColorScheme.DARK ? 'dark' : 'light');
         }
         if (isMemoryUser) {
-          authorization.setRefreshToken(user.refresh_token);
+          authorization.setRefreshToken(user.access_token);
         }
         setUserToken(authorization.getCurrentToken());
       }
@@ -58,7 +58,7 @@ export function Auth({ setUserToken, setColorScheme, setLanguage }: Props) {
         authorization.setCurrentUser({ id, email, name });
         authorization.setAuthorizationToken(user.access_token);
         if (isMemoryUser) {
-          authorization.setRefreshToken(user.refresh_token);
+          authorization.setRefreshToken(user.access_token);
         }
         setUserToken(authorization.getCurrentToken());
       }
